@@ -1,0 +1,587 @@
+:root {
+  --usb-blue: #0a4c8c;
+  --usb-blue-bright: #0077d9;
+  --usb-red: #d50032;
+  --usb-navy: #002a5c;
+  --text-primary: #1c1c1e;
+  --text-secondary: #6e6e73;
+  --text-muted: #8e8e93;
+  --border: #d1d1d6;
+  --bg-page: #f2f2f7;
+  --bg-card: #ffffff;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: var(--bg-page);
+}
+
+.screen {
+  padding: 0 0 32px;
+}
+
+.login-card {
+  margin: 16px 16px 0;
+  padding: 28px 20px 24px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+.login-card__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.logo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.logo__shield {
+  display: block;
+  width: 56px;
+  height: auto;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.logo__bank {
+  color: var(--usb-navy);
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.fdic-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.fdic-banner__mark {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--usb-navy);
+  letter-spacing: 0.5px;
+}
+
+.fdic-banner__text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.field__input {
+  border: none;
+  border-bottom: 1px solid #c7c7cc;
+  padding: 8px 0 10px;
+  font-size: 17px;
+  color: var(--text-primary);
+  background: transparent;
+  outline: none;
+}
+
+.field__input:focus {
+  border-bottom-color: var(--usb-blue-bright);
+}
+
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox__box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--usb-blue-bright);
+  position: relative;
+}
+
+.checkbox input:checked + .checkbox__box::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox__label {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.face-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  color: var(--usb-blue-bright);
+  font-size: 15px;
+  padding: 0;
+  cursor: default;
+}
+
+.face-id__icon {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--usb-blue-bright);
+  border-radius: 50%;
+  position: relative;
+}
+
+.face-id__icon::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1.5px dashed var(--usb-blue-bright);
+  border-radius: 50%;
+}
+
+.login-error {
+  margin: 0;
+  font-size: 14px;
+  color: #c41e3a;
+}
+
+.btn-login {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 16px;
+  background: var(--usb-blue-bright);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-login:active {
+  opacity: 0.9;
+}
+
+.login-help {
+  text-align: center;
+  color: var(--usb-blue-bright);
+  font-size: 16px;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.products {
+  margin-top: 24px;
+}
+
+.products__heading {
+  margin: 0;
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.products__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-card);
+}
+
+.products__list li + li {
+  border-top: 1px solid #e5e5ea;
+}
+
+.product-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px 1fr 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: none;
+  background: var(--bg-card);
+  color: var(--usb-blue);
+  font-size: 16px;
+  text-align: left;
+  cursor: default;
+}
+
+.product-row__icon {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 2px;
+  position: relative;
+}
+
+.product-row__icon--star {
+  border: none;
+  background: conic-gradient(
+    from 0deg,
+    var(--usb-blue) 0 10deg,
+    transparent 10deg 72deg,
+    var(--usb-blue) 72deg 82deg,
+    transparent 82deg 144deg,
+    var(--usb-blue) 144deg 154deg,
+    transparent 154deg 216deg,
+    var(--usb-blue) 216deg 226deg,
+    transparent 226deg 288deg,
+    var(--usb-blue) 288deg 298deg,
+    transparent 298deg 360deg
+  );
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  background: none;
+  border: 2px solid var(--usb-blue);
+  border-radius: 0;
+  transform: rotate(0deg);
+}
+
+.product-row__icon--star::before {
+  content: "★";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--usb-blue);
+  line-height: 1;
+}
+
+.product-row__icon--checking::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 12px;
+  height: 14px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 1px;
+}
+
+.product-row__icon--savings {
+  border-radius: 50% 50% 40% 40%;
+  border-bottom-width: 4px;
+}
+
+.product-row__icon--money-market {
+  border: none;
+  background: linear-gradient(
+    var(--usb-blue) 0,
+    var(--usb-blue) 30%,
+    transparent 30%,
+    transparent 45%,
+    var(--usb-blue) 45%,
+    var(--usb-blue) 75%,
+    transparent 75%
+  );
+  height: 16px;
+  margin-top: 4px;
+}
+
+.product-row__icon--cd {
+  border: none;
+  background: transparent;
+}
+
+.product-row__icon--cd::before,
+.product-row__icon--cd::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  width: 14px;
+  height: 16px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 1px;
+  background: var(--bg-card);
+}
+
+.product-row__icon--cd::before {
+  top: 2px;
+}
+
+.product-row__icon--cd::after {
+  top: 5px;
+  left: 8px;
+}
+
+.product-row__icon--credit-cards {
+  border: none;
+  background: transparent;
+}
+
+.product-row__icon--credit-cards::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 18px;
+  height: 12px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 2px;
+}
+
+.product-row__icon--credit-cards::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 18px;
+  height: 12px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 2px;
+  background: var(--bg-card);
+}
+
+.product-row__icon--personal-loans {
+  border-radius: 50%;
+}
+
+.product-row__icon--personal-loans::before {
+  content: "$";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--usb-blue);
+}
+
+.product-row__icon--home-mortgage,
+.product-row__icon--home-refinance,
+.product-row__icon--home-equity {
+  border: none;
+  background: transparent;
+}
+
+.product-row__icon--home-mortgage::before,
+.product-row__icon--home-refinance::before,
+.product-row__icon--home-equity::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  bottom: 3px;
+  width: 16px;
+  height: 10px;
+  border: 2px solid var(--usb-blue);
+  border-top: none;
+}
+
+.product-row__icon--home-mortgage::after,
+.product-row__icon--home-refinance::after,
+.product-row__icon--home-equity::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 4px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 8px solid var(--usb-blue);
+}
+
+.product-row__icon--home-refinance::before {
+  width: 10px;
+  left: 10px;
+  height: 8px;
+  opacity: 0.45;
+}
+
+.product-row__icon--home-equity::after {
+  content: "$";
+  width: auto;
+  height: auto;
+  top: 7px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--usb-blue);
+  text-align: center;
+}
+
+.product-row__icon--vehicle-loans {
+  border: none;
+  background: transparent;
+  border-radius: 0;
+}
+
+.product-row__icon--vehicle-loans::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  width: 20px;
+  height: 8px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 4px;
+}
+
+.product-row__icon--vehicle-loans::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 50%;
+  background: var(--bg-card);
+  top: 13px;
+  left: 5px;
+  box-shadow: 11px 0 0 0 var(--bg-card), 11px 0 0 2px var(--usb-blue);
+}
+
+.product-row__icon--business-banking::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 14px;
+  height: 11px;
+  border: 2px solid var(--usb-blue);
+  border-radius: 2px 2px 0 0;
+}
+
+.product-row__icon--business-banking::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 2px;
+  width: 8px;
+  height: 4px;
+  border: 2px solid var(--usb-blue);
+  border-bottom: none;
+  border-radius: 2px 2px 0 0;
+}
+
+.product-row__icon--investing {
+  border: none;
+  background: transparent;
+}
+
+.product-row__icon--investing::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  width: 3px;
+  height: 6px;
+  background: var(--usb-blue);
+  box-shadow: 5px -3px 0 0 var(--usb-blue), 10px -8px 0 0 var(--usb-blue),
+    15px -4px 0 0 var(--usb-blue);
+}
+
+.product-row__icon--investing::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  bottom: 3px;
+  width: 18px;
+  height: 0;
+  border-bottom: 2px solid var(--usb-blue);
+}
+
+.product-row__chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #c7c7cc;
+  border-bottom: 2px solid #c7c7cc;
+  transform: rotate(-45deg);
+  justify-self: end;
+}
+

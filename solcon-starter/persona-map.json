@@ -1,0 +1,7 @@
+{
+  "defaultUserId": "us1",
+  "personas": [
+    { "userId": "us1", "firstName": "John", "label": "John" },
+    { "userId": "us2", "firstName": "Sarah", "label": "Sarah" }
+  ]
+}

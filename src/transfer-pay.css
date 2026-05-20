@@ -1,0 +1,288 @@
+#view-transfer-pay {
+  background: var(--bg-card);
+}
+
+.transfer-header {
+  padding: 16px 20px 0;
+  background: var(--bg-card);
+}
+
+.transfer-header__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.transfer-header__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--usb-navy);
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+}
+
+.transfer-header__search {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--usb-navy);
+  color: #fff;
+  font-size: 18px;
+  cursor: default;
+}
+
+.transfer-header__hero {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  margin: 0 auto 8px;
+}
+
+.transfer-content {
+  padding-bottom: 24px;
+}
+
+.transfer-section__heading {
+  margin: 0;
+  padding: 10px 20px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-page);
+}
+
+.transfer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-card);
+}
+
+.transfer-list li + li {
+  border-top: 1px solid #e5e5ea;
+}
+
+.transfer-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 20px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  background: var(--bg-card);
+  font-size: 16px;
+  color: var(--usb-blue);
+  text-align: left;
+  cursor: default;
+}
+
+.transfer-row__icon {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  color: var(--usb-blue);
+}
+
+.transfer-row__icon--transfer::before,
+.transfer-row__icon--transfer::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  background: currentColor;
+}
+
+.transfer-row__icon--transfer::before {
+  left: 2px;
+  transform: translateY(-50%);
+}
+
+.transfer-row__icon--transfer::after {
+  right: 2px;
+  transform: translateY(-50%);
+}
+
+.transfer-row__icon--transfer span {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.transfer-row__icon--transfer span::before,
+.transfer-row__icon--transfer span::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+.transfer-row__icon--transfer span::before {
+  left: 0;
+  transform: translateY(-50%) rotate(-135deg);
+}
+
+.transfer-row__icon--transfer span::after {
+  right: 0;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.transfer-row__icon--activity::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 1px;
+  transform: rotate(-35deg);
+}
+
+.transfer-row__icon--bank::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  width: 18px;
+  height: 10px;
+  border: 2px solid currentColor;
+  border-top: none;
+}
+
+.transfer-row__icon--bank::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 10px;
+  height: 8px;
+  border: 2px solid currentColor;
+  border-bottom: none;
+}
+
+.transfer-row__icon--wires::before {
+  content: "$";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid currentColor;
+  border-radius: 50% 50% 40% 40%;
+}
+
+.transfer-row__icon--zelle {
+  font-size: 9px;
+  font-weight: 800;
+  color: #6d1ed4;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.transfer-row__icon--zelle::before {
+  content: "Zelle";
+}
+
+.transfer-row__icon--bills::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  width: 14px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 1px;
+}
+
+.transfer-row__icon--bills::after {
+  content: "$";
+  position: absolute;
+  left: 9px;
+  top: 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.transfer-row__icon--deposit::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 5px;
+  width: 16px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+}
+
+.transfer-row__icon--deposit::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.transfer-row__icon--eye::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  width: 18px;
+  height: 8px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.transfer-row__icon--eye::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 10px;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.transfer-row__chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #c7c7cc;
+  border-bottom: 2px solid #c7c7cc;
+  transform: rotate(-45deg);
+  justify-self: end;
+}
+
+.transfer-footer {
+  padding: 20px;
+  background: var(--bg-page);
+  font-size: 16px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.transfer-footer__link {
+  color: var(--usb-blue-bright);
+  font-weight: 700;
+  text-decoration: none;
+}

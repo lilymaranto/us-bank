@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0238B9" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>U.S. Bank</title>
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <style>
+      html,
+      body,
+      #app {
+        background: #0238b9;
+      }
+      .dashboard-hero__search-icon svg,
+      .dashboard-hero__mic svg {
+        width: 24px;
+        height: 24px;
+        max-width: 24px;
+        max-height: 24px;
+        display: block;
+      }
+      .dashboard-hero__bell-icon {
+        width: 24px;
+        height: 24px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <div id="dashboard" class="dashboard">
+        <div id="view-accounts" class="app-view app-view--active" aria-label="Accounts">
+          <header class="dashboard-hero">
+            <div class="dashboard-hero__top">
+              <button
+                type="button"
+                id="dashboard-hero-menu"
+                class="dashboard-hero__menu"
+                aria-label="Menu"
+              ></button>
+              <label class="dashboard-hero__search">
+                <span class="dashboard-hero__search-icon" aria-hidden="true">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.25" />
+                    <path
+                      d="M15.5 15.5L20 20"
+                      stroke="currentColor"
+                      stroke-width="2.25"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+                <input
+                  class="dashboard-hero__search-input"
+                  type="search"
+                  placeholder="U.S. Bank Smart Assistant"
+                  readonly
+                />
+                <span class="dashboard-hero__mic" aria-hidden="true">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="9"
+                      y="3"
+                      width="6"
+                      height="11"
+                      rx="3"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    />
+                    <path
+                      d="M5 12a7 7 0 0 0 14 0"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                    <path d="M12 19v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M8 22h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </span>
+              </label>
+              <button
+                type="button"
+                id="notifications-bell"
+                class="dashboard-hero__bell"
+                aria-label="Notifications"
+              >
+                <svg
+                  class="dashboard-hero__bell-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M18 14v-4.2a6 6 0 1 0-12 0V14l-1.8 2.4h15.6L18 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M9.5 18.5a2.5 2.5 0 0 0 5 0"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <span
+                  id="notifications-bell-badge"
+                  class="dashboard-hero__bell-badge"
+                  hidden
+                  aria-hidden="true"
+                ></span>
+              </button>
+            </div>
+            <h1 id="dashboard-welcome" class="dashboard-hero__welcome">Welcome.</h1>
+            <div class="dashboard-hero__toolbar">
+              <div class="dashboard-quick-actions">
+                <button type="button" class="dashboard-quick-actions__btn">Rewards</button>
+                <button type="button" class="dashboard-quick-actions__btn">Deposit check</button>
+                <button type="button" class="dashboard-quick-actions__btn">Send | Zelle®</button>
+                <button type="button" class="dashboard-quick-actions__btn dashboard-quick-actions__btn--more">···</button>
+              </div>
+            </div>
+          </header>
+
+          <div class="dashboard-body">
+            <div id="dashboard-promo-carousel" class="dashboard-promo-carousel"></div>
+
+            <section aria-labelledby="checking-heading">
+              <h2 id="checking-heading" class="dashboard-section__heading">Checking &amp; savings</h2>
+              <div class="dashboard-account-list">
+                <button type="button" class="dashboard-account-row">
+                  <span class="dashboard-account-row__name">Checking ...2770</span>
+                  <span class="dashboard-account-row__right">
+                    <span class="dashboard-account-row__amount">$3,842.17</span>
+                    <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                  </span>
+                </button>
+                <button type="button" class="dashboard-account-row">
+                  <span class="dashboard-account-row__name">Savings ...1856</span>
+                  <span class="dashboard-account-row__right">
+                    <span class="dashboard-account-row__amount">$14,256.80</span>
+                    <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                  </span>
+                </button>
+              </div>
+              <div class="dashboard-total">
+                <span>Total balance</span>
+                <span class="dashboard-total__amount">$18,098.97</span>
+              </div>
+            </section>
+
+            <section aria-labelledby="credit-heading">
+              <h2 id="credit-heading" class="dashboard-section__heading">Credit cards</h2>
+              <button type="button" class="dashboard-account-row">
+                <span class="dashboard-account-row__info">
+                  <span class="dashboard-account-row__name">Credit Card ...4983</span>
+                  <span class="dashboard-account-row__sub">Available credit $10,000.00</span>
+                </span>
+                <span class="dashboard-account-row__right">
+                  <span class="dashboard-account-row__amount">$0.00</span>
+                  <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                </span>
+              </button>
+            </section>
+
+            <button type="button" class="dashboard-rewards-row">
+              <span>Rewards points 0</span>
+              <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+            </button>
+
+            <article class="dashboard-card dashboard-external">
+              <h2 class="dashboard-external__title">
+                Multiple accounts? View them all in one, secure place.
+              </h2>
+              <p class="dashboard-external__text">
+                Connect your external accounts to view your account totals on your U.S. Bank dashboard.
+              </p>
+              <div class="dashboard-external__banks">
+                <span class="dashboard-external__bank dashboard-external__bank--chase">CHASE</span>
+                <span class="dashboard-external__bank dashboard-external__bank--chime">chime</span>
+                <span class="dashboard-external__bank dashboard-external__bank--wells">WF</span>
+                <button type="button" class="dashboard-external__arrow" aria-label="Connect accounts">›</button>
+              </div>
+            </article>
+
+            <ul class="dashboard-action-list">
+              <li>
+                <button type="button" class="dashboard-action-row">
+                  <span class="dashboard-action-row__icon" aria-hidden="true"></span>
+                  <span>Open a new account</span>
+                  <span class="dashboard-action-row__chevron" aria-hidden="true"></span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="dashboard-action-row">
+                  <span class="dashboard-action-row__icon dashboard-action-row__icon--calendar" aria-hidden="true"></span>
+                  <span>Make an appointment</span>
+                  <span class="dashboard-action-row__chevron" aria-hidden="true"></span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="dashboard-action-row">
+                  <span class="dashboard-action-row__icon dashboard-action-row__icon--limits" aria-hidden="true"></span>
+                  <span>View transaction limits</span>
+                  <span class="dashboard-action-row__chevron" aria-hidden="true"></span>
+                </button>
+              </li>
+            </ul>
+
+            <section aria-labelledby="transactions-heading">
+              <div class="dashboard-transactions__header">
+                <span id="transactions-heading" class="dashboard-transactions__title">
+                  Transactions
+                  <span class="dashboard-transactions__info" aria-hidden="true">i</span>
+                </span>
+                <a href="#" class="dashboard-transactions__more" onclick="return false">View more</a>
+              </div>
+              <article class="dashboard-card dashboard-transactions__card">
+                <div class="dashboard-tabs" role="tablist">
+                  <button type="button" class="dashboard-tabs__btn dashboard-tabs__btn--active" role="tab">Recent</button>
+                  <button type="button" class="dashboard-tabs__btn" role="tab">Scheduled</button>
+                </div>
+                <ul class="dashboard-tx-list">
+                  <li>
+                    <button type="button" class="dashboard-tx-row">
+                      <span class="dashboard-tx-row__icon dashboard-tx-row__icon--amex" aria-hidden="true">AMEX</span>
+                      <span class="dashboard-tx-row__main">
+                        <span class="dashboard-tx-row__name">Costco Wholesale</span>
+                        <span class="dashboard-tx-row__date">05/17/2026</span>
+                      </span>
+                      <span class="dashboard-tx-row__amount-col">
+                        <span class="dashboard-tx-row__amount">$156.42</span>
+                        <span class="dashboard-tx-row__account">Checking ...2770</span>
+                      </span>
+                      <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dashboard-tx-row">
+                      <span class="dashboard-tx-row__icon dashboard-tx-row__icon--amex" aria-hidden="true">AMEX</span>
+                      <span class="dashboard-tx-row__main">
+                        <span class="dashboard-tx-row__name">Starbucks</span>
+                        <span class="dashboard-tx-row__date">05/16/2026</span>
+                      </span>
+                      <span class="dashboard-tx-row__amount-col">
+                        <span class="dashboard-tx-row__amount">$6.75</span>
+                        <span class="dashboard-tx-row__account">Checking ...2770</span>
+                      </span>
+                      <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dashboard-tx-row">
+                      <span class="dashboard-tx-row__icon dashboard-tx-row__icon--amex" aria-hidden="true">AMEX</span>
+                      <span class="dashboard-tx-row__main">
+                        <span class="dashboard-tx-row__name">Amazon.com</span>
+                        <span class="dashboard-tx-row__date">05/15/2026</span>
+                      </span>
+                      <span class="dashboard-tx-row__amount-col">
+                        <span class="dashboard-tx-row__amount">$89.23</span>
+                        <span class="dashboard-tx-row__account">Checking ...2770</span>
+                      </span>
+                      <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="dashboard-tx-row">
+                      <span class="dashboard-tx-row__icon dashboard-tx-row__icon--deposit" aria-hidden="true">$</span>
+                      <span class="dashboard-tx-row__main">
+                        <span class="dashboard-tx-row__name">Direct Deposit — Payroll</span>
+                        <span class="dashboard-tx-row__date">05/15/2026</span>
+                      </span>
+                      <span class="dashboard-tx-row__amount-col">
+                        <span class="dashboard-tx-row__amount dashboard-tx-row__amount--credit">+$2,847.00</span>
+                        <span class="dashboard-tx-row__account">Checking ...2770</span>
+                      </span>
+                      <span class="dashboard-tx-row__chevron" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                </ul>
+              </article>
+            </section>
+
+            <article class="dashboard-card dashboard-deals">
+              <h2 class="dashboard-deals__title">Cash-back deals</h2>
+              <div class="dashboard-deals__scroll">
+                <div class="dashboard-deal-card">
+                  <div class="dashboard-deal-card__image dashboard-deal-card__image--sams"></div>
+                  <span class="dashboard-deal-card__badge">New</span>
+                  <span class="dashboard-deal-card__heart" aria-hidden="true">♡</span>
+                  <div class="dashboard-deal-card__body">
+                    <div class="dashboard-deal-card__brand">Sam's Club</div>
+                    <div class="dashboard-deal-card__offer">20% cash back</div>
+                  </div>
+                  <button type="button" class="dashboard-deal-card__add" aria-label="Add deal">+</button>
+                </div>
+                <div class="dashboard-deal-card">
+                  <div class="dashboard-deal-card__image dashboard-deal-card__image--dg"></div>
+                  <span class="dashboard-deal-card__badge">New</span>
+                  <span class="dashboard-deal-card__heart" aria-hidden="true">♡</span>
+                  <div class="dashboard-deal-card__body">
+                    <div class="dashboard-deal-card__brand">Dollar General</div>
+                    <div class="dashboard-deal-card__offer">10% cash back</div>
+                  </div>
+                  <button type="button" class="dashboard-deal-card__add" aria-label="Add deal">+</button>
+                </div>
+                <div class="dashboard-deal-card">
+                  <div class="dashboard-deal-card__image dashboard-deal-card__image--baskin"></div>
+                  <div class="dashboard-deal-card__body">
+                    <div class="dashboard-deal-card__brand">Baskin Robbins</div>
+                    <div class="dashboard-deal-card__offer">5% cash back</div>
+                  </div>
+                  <button type="button" class="dashboard-deal-card__add" aria-label="Add deal">+</button>
+                </div>
+              </div>
+              <button type="button" class="dashboard-deals__cta">View all deals (97)</button>
+            </article>
+          </div>
+        </div>
+
+        <div id="view-transfer-pay" class="app-view" aria-label="Transfer and pay" hidden>
+          <header class="transfer-header">
+            <div class="transfer-header__top">
+              <h1 class="transfer-header__title">Transfer &amp; pay</h1>
+              <button type="button" class="transfer-header__search" aria-label="Search">⌕</button>
+            </div>
+            <img
+              class="transfer-header__hero"
+              src="/transfer-hero.png"
+              alt=""
+              width="470"
+              height="172"
+            />
+          </header>
+
+          <div class="transfer-content">
+            <section aria-labelledby="transfer-transfers-heading">
+              <h2 id="transfer-transfers-heading" class="transfer-section__heading">Transfers</h2>
+              <ul class="transfer-list">
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--transfer" aria-hidden="true"><span></span></span>
+                    <span>Send transfer</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--activity" aria-hidden="true"></span>
+                    <span>Transfers activity</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--bank" aria-hidden="true"></span>
+                    <span>Manage external accounts</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--wires" aria-hidden="true"></span>
+                    <span>Wires</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <section aria-labelledby="transfer-payments-heading">
+              <h2 id="transfer-payments-heading" class="transfer-section__heading">Payments &amp; bills</h2>
+              <ul class="transfer-list">
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--zelle" aria-hidden="true"></span>
+                    <span>Send &amp; request money with Zelle®</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--bills" aria-hidden="true"></span>
+                    <span>Pay bills</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <section aria-labelledby="transfer-deposits-heading">
+              <h2 id="transfer-deposits-heading" class="transfer-section__heading">Deposits</h2>
+              <ul class="transfer-list">
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--deposit" aria-hidden="true"></span>
+                    <span>Deposit a check</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="transfer-row">
+                    <span class="transfer-row__icon transfer-row__icon--eye" aria-hidden="true"></span>
+                    <span>View mobile check deposits</span>
+                    <span class="transfer-row__chevron" aria-hidden="true"></span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <p class="transfer-footer">
+              See your
+              <a href="#" class="transfer-footer__link" onclick="return false">transaction limits.</a>
+            </p>
+          </div>
+        </div>
+
+        <div id="view-plan-track" class="app-view" aria-label="Plan and track" hidden>
+          <header class="plan-header">
+            <h1 class="plan-header__title">Plan &amp; track</h1>
+            <button type="button" class="plan-header__chat" aria-label="Chat"></button>
+          </header>
+
+          <div class="plan-content">
+            <div class="plan-accounts-bar">
+              <button type="button" class="plan-accounts-bar__row">
+                <span>
+                  <span class="plan-accounts-bar__title">Accounts</span>
+                  <span class="plan-accounts-bar__sub">Showing 3 of 3</span>
+                </span>
+                <span class="plan-accounts-bar__right">
+                  <span class="plan-accounts-bar__logos">
+                    <img class="plan-accounts-bar__logo" src="/us-shield.png" alt="" width="28" height="28" />
+                    <img class="plan-accounts-bar__logo" src="/us-shield.png" alt="" width="28" height="28" />
+                    <img class="plan-accounts-bar__logo" src="/us-shield.png" alt="" width="28" height="28" />
+                  </span>
+                  <span class="plan-accounts-bar__chevron" aria-hidden="true"></span>
+                </span>
+              </button>
+              <button type="button" class="plan-accounts-bar__customize">Customize</button>
+            </div>
+
+            <article class="plan-card plan-cashflow">
+              <div class="plan-card__head">
+                <div class="plan-card__head-text">
+                  <h2 class="plan-card__title">Cash flow</h2>
+                  <p class="plan-card__month">May</p>
+                </div>
+                <span class="plan-card__chevron" aria-hidden="true"></span>
+              </div>
+              <div class="plan-cashflow__main">
+                <p class="plan-cashflow__amount">$546.83</p>
+                <div class="plan-cashflow__delta">
+                  <span class="plan-cashflow__arrow" aria-hidden="true"></span>
+                  <p class="plan-cashflow__delta-text">$431.16 from previous month</p>
+                </div>
+              </div>
+              <div class="plan-cashflow__banner">
+                <span class="plan-cashflow__banner-icon" aria-hidden="true">i</span>
+                You've earned more than you've spent.
+              </div>
+              <div class="plan-cashflow__split">
+                <div>
+                  <span class="plan-cashflow__label">Income</span>
+                  <span class="plan-cashflow__value">$986.83</span>
+                </div>
+                <div>
+                  <span class="plan-cashflow__label">Spending</span>
+                  <span class="plan-cashflow__value">$440.00</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="plan-card plan-external">
+              <h2 class="plan-external__title">
+                Multiple accounts? View them all in one, secure place.
+              </h2>
+              <p class="plan-external__text">
+                Connect your external accounts to view your account totals on your U.S. Bank dashboard.
+              </p>
+              <div class="plan-external__banks">
+                <span class="plan-external__bank plan-external__bank--chase">CHASE</span>
+                <span class="plan-external__bank plan-external__bank--chime">chime</span>
+                <span class="plan-external__bank plan-external__bank--wells">WELLS<br />FARGO</span>
+                <button type="button" class="plan-external__arrow" aria-label="Connect accounts">›</button>
+              </div>
+            </article>
+
+            <article class="plan-card plan-spending">
+              <div class="plan-card__head">
+                <div class="plan-card__head-text">
+                  <h2 class="plan-card__title">Spending</h2>
+                  <p class="plan-card__month">May</p>
+                </div>
+                <span class="plan-card__chevron" aria-hidden="true"></span>
+              </div>
+              <div class="plan-spending__top">
+                <p class="plan-spending__amount">$440.00</p>
+                <div class="plan-spending__compare">
+                  <div class="plan-cashflow__delta">
+                    <span class="plan-cashflow__arrow plan-spending__arrow--down" aria-hidden="true"></span>
+                    <div>
+                      <p class="plan-spending__compare-amount">$750.33</p>
+                      <p class="plan-spending__compare-label">from previous month at this time</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="plan-chart" aria-hidden="true">
+                <svg class="plan-chart__svg" viewBox="0 0 320 140" preserveAspectRatio="none">
+                  <line x1="0" y1="35" x2="320" y2="35" stroke="#e5e5ea" stroke-width="1" />
+                  <line x1="0" y1="70" x2="320" y2="70" stroke="#e5e5ea" stroke-width="1" />
+                  <line x1="0" y1="105" x2="320" y2="105" stroke="#e5e5ea" stroke-width="1" />
+                  <path
+                    d="M0,95 L40,88 L80,72 L120,78 L160,58 L200,65 L240,48 L280,55 L320,42 L320,120 L0,120 Z"
+                    fill="rgba(0,119,217,0.15)"
+                  />
+                  <path
+                    d="M0,95 L40,88 L80,72 L120,78 L160,58 L200,65 L240,48 L280,55 L320,42"
+                    fill="none"
+                    stroke="#002a5c"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle cx="240" cy="48" r="5" fill="#002a5c" />
+                  <text x="228" y="38" font-size="11" fill="#002a5c" font-family="system-ui,sans-serif">Today</text>
+                </svg>
+                <div class="plan-chart__axis">
+                  <span>1</span>
+                  <span>15</span>
+                  <span>31</span>
+                </div>
+                <div class="plan-chart__legend">
+                  <span class="plan-chart__legend-item">
+                    <span class="plan-chart__dot plan-chart__dot--prev"></span>
+                    Previous month
+                  </span>
+                  <span class="plan-chart__legend-item">
+                    <span class="plan-chart__dot plan-chart__dot--current"></span>
+                    Current month
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            <article class="plan-card plan-bills">
+              <div class="plan-card__head">
+                <div class="plan-card__head-text">
+                  <h2 class="plan-card__title">Bills &amp; subscriptions</h2>
+                  <p class="plan-card__month">May</p>
+                </div>
+                <span class="plan-card__chevron" aria-hidden="true"></span>
+              </div>
+              <div class="plan-bills__grid">
+                <div class="plan-bills__cell">
+                  <span class="plan-bills__cell-label">Paid so far</span>
+                  <span class="plan-bills__cell-value">$25.00</span>
+                </div>
+                <div class="plan-bills__cell">
+                  <span class="plan-bills__cell-label">Trend</span>
+                  <span class="plan-bills__cell-muted">None</span>
+                </div>
+                <div class="plan-bills__cell">
+                  <span class="plan-bills__cell-label">Largest bill</span>
+                  <p class="plan-bills__cell-value--sm">
+                    <span class="plan-bills__bill-icon" aria-hidden="true"></span>
+                    Scheduled Transfer
+                  </p>
+                  <span class="plan-bills__cell-value">$25.00</span>
+                </div>
+                <div class="plan-bills__cell">
+                  <span class="plan-bills__cell-label">Changed bills</span>
+                  <span class="plan-bills__cell-muted">None</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div id="view-products-offers" class="app-view" aria-label="Products and offers" hidden>
+          <header class="products-header">
+            <h1 class="products-header__title">Products &amp; offers</h1>
+            <button type="button" class="products-header__chat" aria-label="Chat"></button>
+          </header>
+
+          <div class="products-tabs" role="tablist">
+            <button type="button" class="products-tabs__btn products-tabs__btn--active" role="tab">
+              Products
+            </button>
+            <button type="button" class="products-tabs__btn" role="tab">Life moments</button>
+          </div>
+
+          <section class="products-promo" aria-label="Recommended for you">
+            <p class="products-promo__eyebrow">Recommended for you</p>
+            <div class="products-promo__badge-row">
+              <span class="products-promo__badge">
+                <span class="products-promo__badge-star" aria-hidden="true">★</span>
+                Ideal for prospective savers
+              </span>
+              <span class="products-promo__info" aria-label="More information">i</span>
+            </div>
+            <h2 class="products-promo__product">U.S. Bank Smartly® Savings Account</h2>
+            <p class="products-promo__apy">Earn up to 4.00% APY</p>
+            <button type="button" class="products-promo__cta">Learn More</button>
+            <p class="products-promo__details">
+              Earn up to 4.00% APY when you are an account owner of a Bank Smartly Checking
+              account, Safe Debit account, or U.S. Bank Smartly™ Visa Signature® Card and a
+              Combined Qualifying Balance (CQB) of at least $25,000. APYs may vary by
+              location and are accurate for accounts opened on today's date.*
+            </p>
+            <p class="products-promo__footnote">*Terms and conditions apply</p>
+          </section>
+
+          <div class="products-spacer" aria-hidden="true"></div>
+        </div>
+
+        <div id="view-investments" class="app-view" aria-label="Investments" hidden>
+          <header class="investments-header">
+            <h1 class="investments-header__title">Investments</h1>
+          </header>
+
+          <div class="investments-content">
+            <section class="investments-hero">
+              <h2 class="investments-hero__title">Invest with clarity and confidence</h2>
+              <p class="investments-hero__text">
+                Your ambitions are unique. Your investment support should be too. From
+                do-it-yourself to fully advised accounts, we offer tailored options designed
+                to align seamlessly with your goals.
+              </p>
+            </section>
+
+            <div class="investments-visual" aria-hidden="true">
+              <div class="investments-visual__devices">
+                <div class="investments-device investments-device--laptop">
+                  <div class="investments-device__screen">
+                    <div class="investments-device__label">Wealth Management</div>
+                    <div class="investments-device__balance">$676,514.98</div>
+                    <div class="investments-device__chart"></div>
+                  </div>
+                </div>
+                <div class="investments-device investments-device--phone">
+                  <div class="investments-device__screen">
+                    <div class="investments-device__label">Wealth Management</div>
+                    <div class="investments-device__balance">$676,514.98</div>
+                    <div class="investments-device__chart investments-device__chart--small"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <article class="investments-brokerage">
+              <h2 class="investments-brokerage__title">Open a brokerage account</h2>
+              <p class="investments-brokerage__intro">
+                Opening a
+                <a href="#" class="investments-link" onclick="return false">Self-directed account</a>
+                is fast, secure and gives you complete control of your portfolio. Put your
+                financial future in your hands – because no one cares more about your money
+                than you do.
+              </p>
+              <ul class="investments-brokerage__list">
+                <li>
+                  <span class="investments-check" aria-hidden="true"></span>
+                  No trading fees, no minimum and no account fees<sup>1</sup>
+                </li>
+                <li>
+                  <span class="investments-check" aria-hidden="true"></span>
+                  Trade stocks, exchange-traded funds (ETFs),<sup>2</sup> mutual funds and
+                  options directly online
+                </li>
+                <li>
+                  <span class="investments-check" aria-hidden="true"></span>
+                  Choose your account type – taxable, Traditional IRA, Roth IRA and SEP IRA
+                  – and get started
+                </li>
+              </ul>
+              <button type="button" class="investments-brokerage__cta">Open an account</button>
+            </article>
+
+            <section class="investments-advisor">
+              <h2 class="investments-advisor__title">Talk to a financial advisor</h2>
+              <p class="investments-advisor__text">
+                Get personalized guidance from U.S. Bancorp Investments professionals who
+                can help you build a plan around what matters most to you.
+              </p>
+              <button type="button" class="investments-advisor__cta">Find an advisor</button>
+            </section>
+          </div>
+        </div>
+
+        <div id="view-menu" class="menu" hidden>
+          <header class="menu-header">
+            <button
+              type="button"
+              id="menu-back"
+              class="menu-header__back"
+              aria-label="Back"
+            >
+              ‹
+            </button>
+            <h1 class="menu-header__title">Menu</h1>
+          </header>
+
+          <div class="menu-scroll">
+            <section class="menu-section" aria-labelledby="menu-heading-profile">
+              <h2 id="menu-heading-profile" class="menu-section__heading">
+                Profile &amp; settings
+              </h2>
+              <div class="menu-user-switch">
+                <label class="menu-user-switch__label" for="menu-user-id">User ID</label>
+                <input
+                  id="menu-user-id"
+                  class="menu-user-switch__input"
+                  type="text"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button type="button" id="menu-change-user" class="menu-user-switch__btn">
+                  Change user
+                </button>
+                <p id="menu-user-error" class="menu-user-switch__error" hidden></p>
+              </div>
+            </section>
+
+            <section class="menu-section" aria-labelledby="menu-heading-rewards">
+              <h2 id="menu-heading-rewards" class="menu-section__heading">Rewards</h2>
+              <ul class="menu-list">
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--star" aria-hidden="true"></span>
+                    <span class="menu-row__label">Smart Rewards</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <section class="menu-section" aria-labelledby="menu-heading-manage">
+              <h2 id="menu-heading-manage" class="menu-section__heading">Manage</h2>
+              <ul class="menu-list">
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--accounts" aria-hidden="true"></span>
+                    <span class="menu-row__label">Manage accounts</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--card" aria-hidden="true"></span>
+                    <span class="menu-row__label">Manage cards</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--bell" aria-hidden="true"></span>
+                    <span class="menu-row__label">Notifications</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--lock" aria-hidden="true"></span>
+                    <span class="menu-row__label">Security center</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <section class="menu-section" aria-labelledby="menu-heading-docs">
+              <h2 id="menu-heading-docs" class="menu-section__heading">Documents</h2>
+              <ul class="menu-list">
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--doc" aria-hidden="true"></span>
+                    <span class="menu-row__label">Statements &amp; docs</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <section class="menu-section" aria-labelledby="menu-heading-support">
+              <h2 id="menu-heading-support" class="menu-section__heading">
+                Customer support
+              </h2>
+              <ul class="menu-list">
+                <li>
+                  <button type="button" class="menu-row">
+                    <span class="menu-row__icon menu-row__icon--help" aria-hidden="true"></span>
+                    <span class="menu-row__label">Help &amp; services</span>
+                    <span class="menu-row__chevron" aria-hidden="true">›</span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <div class="menu-logout-wrap">
+              <button type="button" id="menu-logout" class="menu-logout">Log out</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-notifications" class="notifications" hidden>
+          <header class="notifications-header">
+            <button
+              type="button"
+              id="notifications-back"
+              class="notifications-header__back"
+              aria-label="Back"
+            >
+              ‹
+            </button>
+            <h1 class="notifications-header__title">Notifications</h1>
+            <button type="button" class="notifications-header__search" aria-label="Search">
+              ⌕
+            </button>
+          </header>
+
+          <div class="notifications-tabs" role="tablist">
+            <button type="button" class="notifications-tabs__btn">Updates</button>
+            <button type="button" class="notifications-tabs__btn notifications-tabs__btn--active" role="tab">
+              Inbox
+            </button>
+            <button type="button" class="notifications-tabs__btn">Settings</button>
+          </div>
+
+          <div class="notifications-toolbar">
+            <button type="button" class="notifications-toolbar__edit">Edit</button>
+          </div>
+
+          <ul class="notifications-list" id="notifications-list"></ul>
+        </div>
+
+        <nav class="tab-bar" aria-label="Main navigation">
+          <button type="button" class="tab-bar__item tab-bar__item--active" data-tab="accounts">
+            <span class="tab-bar__icon tab-bar__icon--accounts" aria-hidden="true"></span>
+            <span class="tab-bar__label">Accounts</span>
+          </button>
+          <button type="button" class="tab-bar__item" data-tab="transfer">
+            <span class="tab-bar__icon tab-bar__icon--transfer" aria-hidden="true"></span>
+            <span class="tab-bar__label">Transfer &amp; pay</span>
+          </button>
+          <button type="button" class="tab-bar__item" data-tab="plan">
+            <span class="tab-bar__icon tab-bar__icon--plan" aria-hidden="true"></span>
+            <span class="tab-bar__label">Plan &amp; track</span>
+          </button>
+          <button type="button" class="tab-bar__item" data-tab="products">
+            <span class="tab-bar__icon tab-bar__icon--products" aria-hidden="true"></span>
+            <span class="tab-bar__label">Products &amp; offers</span>
+          </button>
+          <button type="button" class="tab-bar__item" data-tab="investments">
+            <span class="tab-bar__icon tab-bar__icon--invest" aria-hidden="true"></span>
+            <span class="tab-bar__label">Investments</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
