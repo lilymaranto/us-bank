@@ -151,6 +151,7 @@ export function initIdentityBridge() {
  * Native bridge will reply via listenForNative if it has a different user.
  */
 export async function bootstrapIdentity() {
+  console.info("[demo] Bootstrapping identity. Latest race-condition guard is active.");
   initIdentityBridge();
 
   // Apply default user. This safely handles synchronous native replies because
