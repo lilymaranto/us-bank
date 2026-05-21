@@ -11,8 +11,11 @@ export const CONFIG_ID = "us-bank";
 export const DEFAULT_USER_ID =
   personaMap.defaultUserId || personaMap.personas?.[0]?.userId || "us1";
 
-/** Wait for native flush / nativeUserUpdate before applying web default. */
+/** Initial wait for native flush / handshake before reading Braze user. */
 const NATIVE_BOOTSTRAP_DEFER_MS = 400;
+/** Poll for user id after native may have called changeUser via DemoBridge.startSession. */
+const BRAZE_USER_POLL_ATTEMPTS = 15;
+const BRAZE_USER_POLL_INTERVAL_MS = 100;
 
 const personaByUserId = new Map(
   (personaMap.personas || []).map((persona) => [persona.userId, persona]),
@@ -81,6 +84,35 @@ function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Read user id the bridge / handshake may have set before our listener runs. */
+function readBrazeUserIdSync() {
+  try {
+    const braze = window.braze;
+    if (!braze || typeof braze.getUser !== "function") return null;
+    const user = braze.getUser();
+    if (!user) return null;
+    if (typeof user.getUserId === "function") {
+      const id = user.getUserId();
+      return id ? String(id).trim() : null;
+    }
+    if (typeof user.userId === "string" && user.userId.length > 0) {
+      return user.userId.trim();
+    }
+  } catch (_error) {
+    /* Braze not ready */
+  }
+  return null;
+}
+
+async function resolveBrazeUserId() {
+  for (let attempt = 0; attempt < BRAZE_USER_POLL_ATTEMPTS; attempt += 1) {
+    const id = readBrazeUserIdSync();
+    if (id) return id;
+    await delay(BRAZE_USER_POLL_INTERVAL_MS);
+  }
+  return null;
+}
+
 /**
  * Native → web updates (mid-session, reopen, prefer-native). Mirrors flex-driver
  * handleNativeUserUpdate: apply Braze/UI only; do not echo back to native.
@@ -89,6 +121,7 @@ export async function handleNativeUserUpdate(incomingUserId) {
   const trimmed = String(incomingUserId ?? "").trim();
   if (!trimmed) return;
   nativeUserApplied = true;
+  setLocalUserState(trimmed);
   return applyUserChange(trimmed, { reason: "manual", syncNative: false });
 }
 
@@ -152,6 +185,17 @@ export async function bootstrapIdentity() {
   setLocalUserState(DEFAULT_USER_ID);
 
   await delay(NATIVE_BOOTSTRAP_DEFER_MS);
+
+  const effectiveUser = await resolveBrazeUserId();
+
+  if (effectiveUser && effectiveUser !== currentUserId) {
+    nativeUserApplied = true;
+    await applyUserChange(effectiveUser, {
+      reason: "manual",
+      syncNative: false,
+    });
+    return;
+  }
 
   if (!nativeUserApplied) {
     await applyUserChange(DEFAULT_USER_ID, {
