@@ -1,0 +1,70 @@
+.investments-spacer {
+  height: 44px;
+}
+
+.investments-promo-container {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.investments-promo-card {
+  display: block;
+  position: relative;
+  background: #eef4fa;
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.investments-promo__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--usb-navy);
+  font-size: 24px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  opacity: 0.6;
+}
+
+.investments-promo__copy {
+  margin-bottom: 20px;
+}
+
+.investments-promo__title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--usb-navy);
+  line-height: 1.2;
+}
+
+.investments-promo__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--usb-navy);
+}
+
+.investments-promo__btn-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.investments-promo__btn {
+  display: inline-block;
+  background: #fff;
+  color: var(--usb-navy);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 20px;
+}

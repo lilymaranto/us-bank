@@ -1,6 +1,7 @@
 import "./styles.css";
 import "./dashboard.css";
 import "./investments.css";
+import "./investments-promos.css";
 import "./transfer-pay.css";
 import "./products-offers.css";
 import "./plan-track.css";
@@ -8,6 +9,7 @@ import { loadBrazeSdk } from "./braze-loader.js";
 import { bootstrapIdentity } from "./identity.js";
 import { initNotifications } from "./notifications.js";
 import { initHomePromos } from "./home-promos.js";
+import { initInvestmentsPromos } from "./investments-promos.js";
 import { initMenu } from "./menu.js";
 
 const TAB_VIEWS = {
@@ -73,5 +75,6 @@ async function bootstrap() {
 initTabBar();
 initNotifications(loadBrazeSdk, switchTab);
 initHomePromos();
+initInvestmentsPromos();
 initMenu(switchTab);
 bootstrap();

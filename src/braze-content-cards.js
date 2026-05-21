@@ -1,13 +1,16 @@
 const LOCATIONS = {
   inbox: "inbox",
   home: "home",
+  investments: "investments",
 };
 
 const dismissedCardIds = new Set();
 let latestInboxCards = [];
 let latestHomeCards = [];
+let latestInvestmentsCards = [];
 const inboxListeners = new Set();
 const homeListeners = new Set();
+const investmentsListeners = new Set();
 
 function getCardLocation(card) {
   return String(card?.extras?.location ?? card?.extras?.Location ?? "").toLowerCase();
@@ -25,8 +28,10 @@ function filterCardsByLocation(cards = [], location) {
 function applyCardUpdate(cards = []) {
   latestInboxCards = filterCardsByLocation(cards, LOCATIONS.inbox);
   latestHomeCards = filterCardsByLocation(cards, LOCATIONS.home);
+  latestInvestmentsCards = filterCardsByLocation(cards, LOCATIONS.investments);
   inboxListeners.forEach((cb) => cb(latestInboxCards));
   homeListeners.forEach((cb) => cb(latestHomeCards));
+  investmentsListeners.forEach((cb) => cb(latestInvestmentsCards));
 }
 
 export function onInboxCardsUpdated(callback) {
@@ -39,6 +44,12 @@ export function onHomeCardsUpdated(callback) {
   homeListeners.add(callback);
   callback(latestHomeCards);
   return () => homeListeners.delete(callback);
+}
+
+export function onInvestmentsCardsUpdated(callback) {
+  investmentsListeners.add(callback);
+  callback(latestInvestmentsCards);
+  return () => investmentsListeners.delete(callback);
 }
 
 export function setupContentCardsSubscription(braze) {
@@ -64,8 +75,10 @@ export function resetContentCardsState() {
   dismissedCardIds.clear();
   latestInboxCards = [];
   latestHomeCards = [];
+  latestInvestmentsCards = [];
   inboxListeners.forEach((cb) => cb(latestInboxCards));
   homeListeners.forEach((cb) => cb(latestHomeCards));
+  investmentsListeners.forEach((cb) => cb(latestInvestmentsCards));
 }
 
 export function dismissContentCard(braze, card) {
@@ -80,8 +93,10 @@ export function dismissContentCard(braze, card) {
   } else {
     latestInboxCards = latestInboxCards.filter((c) => c.id !== card.id);
     latestHomeCards = latestHomeCards.filter((c) => c.id !== card.id);
+    latestInvestmentsCards = latestInvestmentsCards.filter((c) => c.id !== card.id);
     inboxListeners.forEach((cb) => cb(latestInboxCards));
     homeListeners.forEach((cb) => cb(latestHomeCards));
+    investmentsListeners.forEach((cb) => cb(latestInvestmentsCards));
   }
 }
 
@@ -103,4 +118,8 @@ export function getInboxCards() {
 
 export function getHomeCards() {
   return latestHomeCards;
+}
+
+export function getInvestmentsCards() {
+  return latestInvestmentsCards;
 }
