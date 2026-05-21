@@ -17,6 +17,7 @@ const personaByUserId = new Map(
 
 let currentUserId = "";
 let nativeListenerRegistered = false;
+let latestSyncRequest = "";
 
 export function getCurrentUserId() {
   return currentUserId;
@@ -83,9 +84,11 @@ export async function handleNativeUserUpdate(incomingUserId) {
   
   // IMMEDIATELY update UI state
   setLocalUserState(trimmed);
+  latestSyncRequest = trimmed;
 
   try {
     const braze = await switchBrazeUser(trimmed);
+    if (latestSyncRequest !== trimmed) return braze; // Guard against concurrent changes
     refreshContentCards(braze);
     return braze;
   } catch (err) {
@@ -105,6 +108,7 @@ export async function applyUserChange(userId, options = {}) {
 
   // IMMEDIATELY update UI state
   setLocalUserState(trimmed);
+  latestSyncRequest = trimmed;
 
   if (syncNative) {
     if (reason === "default") {
@@ -114,7 +118,14 @@ export async function applyUserChange(userId, options = {}) {
     }
   }
 
+  // If a synchronous native bridge callback overrode the UI, bail out before Braze sync
+  if (latestSyncRequest !== trimmed) {
+    console.info(`[demo] applyUserChange for ${trimmed} preempted by ${latestSyncRequest}`);
+    return;
+  }
+
   const braze = await switchBrazeUser(trimmed);
+  if (latestSyncRequest !== trimmed) return braze; // Guard against concurrent changes
   refreshContentCards(braze);
 
   return braze;
@@ -142,21 +153,7 @@ export function initIdentityBridge() {
 export async function bootstrapIdentity() {
   initIdentityBridge();
 
-  if (!isNativeContainer()) {
-    await applyUserChange(DEFAULT_USER_ID, { reason: "default" });
-    return;
-  }
-
-  // Like Amazon: Start session with default, and also set UI to default.
-  // The native bridge will immediately reply with the real user via listenForNative
-  // if it has one, which will call handleNativeUserUpdate and overwrite the UI.
-  safeStartWebSession(DEFAULT_USER_ID);
-  setLocalUserState(DEFAULT_USER_ID);
-  
-  try {
-    const braze = await switchBrazeUser(DEFAULT_USER_ID);
-    refreshContentCards(braze);
-  } catch (err) {
-    console.error("[demo] Initial Braze sync failed", err);
-  }
+  // Apply default user. This safely handles synchronous native replies because
+  // applyUserChange checks `latestSyncRequest` before syncing Braze.
+  await applyUserChange(DEFAULT_USER_ID, { reason: "default" });
 }
