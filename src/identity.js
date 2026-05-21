@@ -4,7 +4,6 @@ import {
   setUser as syncUserToNative,
   startWebSession,
 } from "../solcon-starter/demo_bridge_entry.js";
-import { loadBrazeSdk } from "./braze-loader.js";
 import { refreshContentCards } from "./braze-content-cards.js";
 import { switchBrazeUser } from "./braze-session.js";
 
@@ -12,17 +11,12 @@ export const CONFIG_ID = "us-bank";
 export const DEFAULT_USER_ID =
   personaMap.defaultUserId || personaMap.personas?.[0]?.userId || "us1";
 
-/** How long to wait for nativeUserUpdate before falling back to default (WebView). */
-const NATIVE_USER_WAIT_MS = 3000;
-const NATIVE_USER_POLL_MS = 50;
-
 const personaByUserId = new Map(
   (personaMap.personas || []).map((persona) => [persona.userId, persona]),
 );
 
 let currentUserId = "";
 let nativeListenerRegistered = false;
-let nativeUserApplied = false;
 
 export function getCurrentUserId() {
   return currentUserId;
@@ -52,7 +46,7 @@ function syncMenuUserInput() {
   if (input) input.value = currentUserId;
 }
 
-/** UI-only identity (welcome, menu) — flex-driver setDriverData equivalent. */
+/** UI-only identity (welcome, menu field) without Braze or bridge traffic. */
 function setLocalUserState(userId) {
   const trimmed = String(userId ?? "").trim();
   if (!trimmed) return;
@@ -79,44 +73,28 @@ function safeSyncToNative(userId, reason = "manual") {
   }
 }
 
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function syncBrazeForUser(userId) {
-  const trimmed = String(userId ?? "").trim();
-  if (!trimmed) return null;
-  const braze = await switchBrazeUser(trimmed);
-  refreshContentCards(braze);
-  return braze;
-}
-
-async function waitForNativeUser(timeoutMs) {
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    if (nativeUserApplied && currentUserId) {
-      return currentUserId;
-    }
-    await delay(NATIVE_USER_POLL_MS);
-  }
-  return nativeUserApplied && currentUserId ? currentUserId : null;
-}
-
 /**
- * Native → web: update UI immediately from incomingUserId, then Braze (flex pattern).
+ * Native → web updates (mid-session, reopen, prefer-native).
+ * Updates UI immediately, then syncs Braze.
  */
-export function handleNativeUserUpdate(incomingUserId) {
+export async function handleNativeUserUpdate(incomingUserId) {
   const trimmed = String(incomingUserId ?? "").trim();
   if (!trimmed) return;
-  nativeUserApplied = true;
+  
+  // IMMEDIATELY update UI state
   setLocalUserState(trimmed);
-  syncBrazeForUser(trimmed).catch((error) => {
-    console.error("[demo] Native Braze sync failed:", error);
-  });
+
+  try {
+    const braze = await switchBrazeUser(trimmed);
+    refreshContentCards(braze);
+    return braze;
+  } catch (err) {
+    console.error("[demo] Failed to switch Braze user on native update", err);
+  }
 }
 
 /**
- * Web-initiated identity: UI first, then bridge + Braze.
+ * Single entry for web-initiated identity changes: Braze, welcome UI, menu field, Doppel sync.
  */
 export async function applyUserChange(userId, options = {}) {
   const { reason = "manual", syncNative = true } = options;
@@ -125,6 +103,7 @@ export async function applyUserChange(userId, options = {}) {
     throw new Error("Enter a user ID.");
   }
 
+  // IMMEDIATELY update UI state
   setLocalUserState(trimmed);
 
   if (syncNative) {
@@ -135,17 +114,21 @@ export async function applyUserChange(userId, options = {}) {
     }
   }
 
-  return syncBrazeForUser(trimmed);
+  const braze = await switchBrazeUser(trimmed);
+  refreshContentCards(braze);
+
+  return braze;
 }
 
 export function initIdentityBridge() {
   if (nativeListenerRegistered) return;
   nativeListenerRegistered = true;
-  nativeUserApplied = false;
 
   try {
     listenForNative((incomingUserId) => {
-      handleNativeUserUpdate(incomingUserId);
+      handleNativeUserUpdate(incomingUserId).catch((error) => {
+        console.error("[demo] Native user sync failed:", error);
+      });
     });
   } catch (error) {
     console.warn("[demo] listenForNative failed — DemoBridge missing?", error);
@@ -153,7 +136,8 @@ export function initIdentityBridge() {
 }
 
 /**
- * Bootstrap: browser uses full default login; WebView handshake only + wait for native id.
+ * Bootstrap: Start session with default, set UI immediately.
+ * Native bridge will reply via listenForNative if it has a different user.
  */
 export async function bootstrapIdentity() {
   initIdentityBridge();
@@ -163,21 +147,16 @@ export async function bootstrapIdentity() {
     return;
   }
 
-  loadBrazeSdk().catch((error) => {
-    console.warn("[demo] Early Braze preload failed:", error);
-  });
-
+  // Like Amazon: Start session with default, and also set UI to default.
+  // The native bridge will immediately reply with the real user via listenForNative
+  // if it has one, which will call handleNativeUserUpdate and overwrite the UI.
   safeStartWebSession(DEFAULT_USER_ID);
-
-  const nativeUser = await waitForNativeUser(NATIVE_USER_WAIT_MS);
-  if (nativeUser) {
-    console.info("[demo] Identity from native:", nativeUser);
-    return;
+  setLocalUserState(DEFAULT_USER_ID);
+  
+  try {
+    const braze = await switchBrazeUser(DEFAULT_USER_ID);
+    refreshContentCards(braze);
+  } catch (err) {
+    console.error("[demo] Initial Braze sync failed", err);
   }
-
-  console.info("[demo] No native user within timeout; applying default:", DEFAULT_USER_ID);
-  await applyUserChange(DEFAULT_USER_ID, {
-    reason: "default",
-    syncNative: false,
-  });
 }
