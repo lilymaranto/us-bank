@@ -4,6 +4,7 @@ import {
   setUser as syncUserToNative,
   startWebSession,
 } from "../solcon-starter/demo_bridge_entry.js";
+import { loadBrazeSdk } from "./braze-loader.js";
 import { refreshContentCards } from "./braze-content-cards.js";
 import { switchBrazeUser } from "./braze-session.js";
 
@@ -11,11 +12,9 @@ export const CONFIG_ID = "us-bank";
 export const DEFAULT_USER_ID =
   personaMap.defaultUserId || personaMap.personas?.[0]?.userId || "us1";
 
-/** Initial wait for native flush / handshake before reading Braze user. */
-const NATIVE_BOOTSTRAP_DEFER_MS = 400;
-/** Poll for user id after native may have called changeUser via DemoBridge.startSession. */
-const BRAZE_USER_POLL_ATTEMPTS = 15;
-const BRAZE_USER_POLL_INTERVAL_MS = 100;
+/** How long to wait for nativeUserUpdate before falling back to default (WebView). */
+const NATIVE_USER_WAIT_MS = 3000;
+const NATIVE_USER_POLL_MS = 50;
 
 const personaByUserId = new Map(
   (personaMap.personas || []).map((persona) => [persona.userId, persona]),
@@ -53,7 +52,7 @@ function syncMenuUserInput() {
   if (input) input.value = currentUserId;
 }
 
-/** UI-only identity (welcome, menu field) without Braze or bridge traffic. */
+/** UI-only identity (welcome, menu) — flex-driver setDriverData equivalent. */
 function setLocalUserState(userId) {
   const trimmed = String(userId ?? "").trim();
   if (!trimmed) return;
@@ -84,49 +83,40 @@ function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/** Read user id the bridge / handshake may have set before our listener runs. */
-function readBrazeUserIdSync() {
-  try {
-    const braze = window.braze;
-    if (!braze || typeof braze.getUser !== "function") return null;
-    const user = braze.getUser();
-    if (!user) return null;
-    if (typeof user.getUserId === "function") {
-      const id = user.getUserId();
-      return id ? String(id).trim() : null;
-    }
-    if (typeof user.userId === "string" && user.userId.length > 0) {
-      return user.userId.trim();
-    }
-  } catch (_error) {
-    /* Braze not ready */
-  }
-  return null;
+async function syncBrazeForUser(userId) {
+  const trimmed = String(userId ?? "").trim();
+  if (!trimmed) return null;
+  const braze = await switchBrazeUser(trimmed);
+  refreshContentCards(braze);
+  return braze;
 }
 
-async function resolveBrazeUserId() {
-  for (let attempt = 0; attempt < BRAZE_USER_POLL_ATTEMPTS; attempt += 1) {
-    const id = readBrazeUserIdSync();
-    if (id) return id;
-    await delay(BRAZE_USER_POLL_INTERVAL_MS);
+async function waitForNativeUser(timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (nativeUserApplied && currentUserId) {
+      return currentUserId;
+    }
+    await delay(NATIVE_USER_POLL_MS);
   }
-  return null;
+  return nativeUserApplied && currentUserId ? currentUserId : null;
 }
 
 /**
- * Native → web updates (mid-session, reopen, prefer-native). Mirrors flex-driver
- * handleNativeUserUpdate: apply Braze/UI only; do not echo back to native.
+ * Native → web: update UI immediately from incomingUserId, then Braze (flex pattern).
  */
-export async function handleNativeUserUpdate(incomingUserId) {
+export function handleNativeUserUpdate(incomingUserId) {
   const trimmed = String(incomingUserId ?? "").trim();
   if (!trimmed) return;
   nativeUserApplied = true;
   setLocalUserState(trimmed);
-  return applyUserChange(trimmed, { reason: "manual", syncNative: false });
+  syncBrazeForUser(trimmed).catch((error) => {
+    console.error("[demo] Native Braze sync failed:", error);
+  });
 }
 
 /**
- * Single entry for web-initiated identity changes: Braze, welcome UI, menu field, Doppel sync.
+ * Web-initiated identity: UI first, then bridge + Braze.
  */
 export async function applyUserChange(userId, options = {}) {
   const { reason = "manual", syncNative = true } = options;
@@ -134,6 +124,8 @@ export async function applyUserChange(userId, options = {}) {
   if (!trimmed) {
     throw new Error("Enter a user ID.");
   }
+
+  setLocalUserState(trimmed);
 
   if (syncNative) {
     if (reason === "default") {
@@ -143,14 +135,7 @@ export async function applyUserChange(userId, options = {}) {
     }
   }
 
-  const braze = await switchBrazeUser(trimmed);
-  refreshContentCards(braze);
-
-  currentUserId = trimmed;
-  updateWelcome(trimmed);
-  syncMenuUserInput();
-
-  return braze;
+  return syncBrazeForUser(trimmed);
 }
 
 export function initIdentityBridge() {
@@ -160,9 +145,7 @@ export function initIdentityBridge() {
 
   try {
     listenForNative((incomingUserId) => {
-      handleNativeUserUpdate(incomingUserId).catch((error) => {
-        console.error("[demo] Native user sync failed:", error);
-      });
+      handleNativeUserUpdate(incomingUserId);
     });
   } catch (error) {
     console.warn("[demo] listenForNative failed — DemoBridge missing?", error);
@@ -170,8 +153,7 @@ export function initIdentityBridge() {
 }
 
 /**
- * Bootstrap: browser runs full default login; MasqV2 WebView handshake only,
- * then waits for native user before falling back to default.
+ * Bootstrap: browser uses full default login; WebView handshake only + wait for native id.
  */
 export async function bootstrapIdentity() {
   initIdentityBridge();
@@ -181,26 +163,21 @@ export async function bootstrapIdentity() {
     return;
   }
 
+  loadBrazeSdk().catch((error) => {
+    console.warn("[demo] Early Braze preload failed:", error);
+  });
+
   safeStartWebSession(DEFAULT_USER_ID);
-  setLocalUserState(DEFAULT_USER_ID);
 
-  await delay(NATIVE_BOOTSTRAP_DEFER_MS);
-
-  const effectiveUser = await resolveBrazeUserId();
-
-  if (effectiveUser && effectiveUser !== currentUserId) {
-    nativeUserApplied = true;
-    await applyUserChange(effectiveUser, {
-      reason: "manual",
-      syncNative: false,
-    });
+  const nativeUser = await waitForNativeUser(NATIVE_USER_WAIT_MS);
+  if (nativeUser) {
+    console.info("[demo] Identity from native:", nativeUser);
     return;
   }
 
-  if (!nativeUserApplied) {
-    await applyUserChange(DEFAULT_USER_ID, {
-      reason: "default",
-      syncNative: false,
-    });
-  }
+  console.info("[demo] No native user within timeout; applying default:", DEFAULT_USER_ID);
+  await applyUserChange(DEFAULT_USER_ID, {
+    reason: "default",
+    syncNative: false,
+  });
 }
