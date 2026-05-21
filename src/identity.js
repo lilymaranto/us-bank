@@ -133,25 +133,17 @@ export async function applyUserChange(userId, options = {}) {
 
 export function initIdentityBridge() {
   if (nativeListenerRegistered) return;
+  nativeListenerRegistered = true;
 
-  const tryListen = (retries = 0) => {
-    try {
-      listenForNative((incomingUserId) => {
-        handleNativeUserUpdate(incomingUserId).catch((error) => {
-          console.error("[demo] Native user sync failed:", error);
-        });
+  try {
+    listenForNative((incomingUserId) => {
+      handleNativeUserUpdate(incomingUserId).catch((error) => {
+        console.error("[demo] Native user sync failed:", error);
       });
-      nativeListenerRegistered = true;
-    } catch (error) {
-      if (retries < 20) {
-        setTimeout(() => tryListen(retries + 1), 50);
-      } else {
-        console.warn("[demo] listenForNative failed after retries — DemoBridge missing?", error);
-      }
-    }
-  };
-
-  tryListen();
+    });
+  } catch (error) {
+    console.warn("[demo] listenForNative failed — DemoBridge missing?", error);
+  }
 }
 
 /**
@@ -159,7 +151,19 @@ export function initIdentityBridge() {
  * Native bridge will reply via listenForNative if it has a different user.
  */
 export async function bootstrapIdentity() {
-  console.info("[demo] Bootstrapping identity. Latest race-condition guard is active.");
+  console.info("[demo] Bootstrapping identity. Waiting for DemoBridge...");
+  
+  // Poll for DemoBridge to avoid WebReadyTimeout on native layer
+  let retries = 0;
+  while (!window.DemoBridge && retries < 20) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    retries++;
+  }
+
+  if (!window.DemoBridge) {
+    console.warn("[demo] DemoBridge not found after polling, proceeding with bootstrap anyway.");
+  }
+
   initIdentityBridge();
 
   // Apply default user. This safely handles synchronous native replies because
