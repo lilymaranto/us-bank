@@ -42,6 +42,23 @@ function updateWelcome(userId) {
   }
 }
 
+function updateBalances(userId) {
+  const checking = document.getElementById("checking-balance");
+  const savings = document.getElementById("savings-balance");
+  const total = document.getElementById("total-balance");
+
+  if (userId === "us2") {
+    if (checking) checking.textContent = "$1,520.40";
+    if (savings) savings.textContent = "$8,450.00";
+    if (total) total.textContent = "$9,970.40";
+  } else {
+    // Default (us1)
+    if (checking) checking.textContent = "$3,842.17";
+    if (savings) savings.textContent = "$14,256.80";
+    if (total) total.textContent = "$18,098.97";
+  }
+}
+
 function syncMenuUserInput() {
   const input = document.getElementById("menu-user-id");
   if (input) input.value = currentUserId;
@@ -53,6 +70,7 @@ function setLocalUserState(userId) {
   if (!trimmed) return;
   currentUserId = trimmed;
   updateWelcome(trimmed);
+  updateBalances(trimmed);
   syncMenuUserInput();
 }
 
