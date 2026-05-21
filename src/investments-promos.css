@@ -25,7 +25,7 @@
   border: none;
   background: transparent;
   color: var(--usb-navy);
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -40,7 +40,7 @@
 
 .investments-promo__title {
   margin: 0 0 8px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--usb-navy);
   line-height: 1.2;
@@ -48,7 +48,7 @@
 
 .investments-promo__text {
   margin: 0;
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.45;
   color: var(--usb-navy);
 }
@@ -62,7 +62,7 @@
   display: inline-block;
   background: #fff;
   color: var(--usb-navy);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
   padding: 10px 16px;
   border-radius: 20px;
