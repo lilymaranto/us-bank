@@ -77,6 +77,15 @@ function createNotificationRow({ title, description, date, card, isBraze }) {
     row.querySelector(".notification-row__desc").textContent = description;
     row.querySelector(".notification-row__date").textContent = date;
 
+    row.addEventListener("click", async () => {
+      if (title === "Security alert: New device login") {
+        const braze = brazeRef || (await loadBrazeSdk());
+        if (typeof braze.logCustomEvent === "function") {
+          braze.logCustomEvent("security_alert");
+        }
+      }
+    });
+
     swipe.appendChild(row);
     attachSwipeHandlers(swipe, row, card);
     return swipe;
