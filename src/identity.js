@@ -133,17 +133,25 @@ export async function applyUserChange(userId, options = {}) {
 
 export function initIdentityBridge() {
   if (nativeListenerRegistered) return;
-  nativeListenerRegistered = true;
 
-  try {
-    listenForNative((incomingUserId) => {
-      handleNativeUserUpdate(incomingUserId).catch((error) => {
-        console.error("[demo] Native user sync failed:", error);
+  const tryListen = (retries = 0) => {
+    try {
+      listenForNative((incomingUserId) => {
+        handleNativeUserUpdate(incomingUserId).catch((error) => {
+          console.error("[demo] Native user sync failed:", error);
+        });
       });
-    });
-  } catch (error) {
-    console.warn("[demo] listenForNative failed — DemoBridge missing?", error);
-  }
+      nativeListenerRegistered = true;
+    } catch (error) {
+      if (retries < 20) {
+        setTimeout(() => tryListen(retries + 1), 50);
+      } else {
+        console.warn("[demo] listenForNative failed after retries — DemoBridge missing?", error);
+      }
+    }
+  };
+
+  tryListen();
 }
 
 /**
